@@ -4,6 +4,10 @@
     <title>Система входа и выхода</title>
 </head>
 <body>
-    <h1>Вы вошли в аккаунт!</h1>
+    <h1>Привет, {{ username }}!</h1>
+    <form action="/delete" method="POST">
+        <button type="submit" onclick="return confirm('Точно удалить?')">Удалить аккаунт</button>
+    </form>
+    <p><a href="/logout">Выйти</a></p>
 </body>
 </html>

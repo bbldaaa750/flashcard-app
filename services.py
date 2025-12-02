@@ -16,3 +16,11 @@ def read_user(username):
         return user
     else:
         raise ValueError(f"Пользователь с именем '{username}' не найден в базе данных.")
+
+def delete_user(username):
+    user = User.query.filter_by(username=username).first()
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+    else:
+        raise ValueError(f"Пользователь с именем '{username}' не найден в базе данных.")
