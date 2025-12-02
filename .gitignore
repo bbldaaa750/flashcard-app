@@ -205,3 +205,22 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Виртуальное окружение
+.venv/
+venv/
+
+# Python-мусор
+__pycache__/
+*.py[cod]
+
+# Flask instance-папка (конфиги, локальные базы)
+instance/
+
+# Файлы SQLite (если вдруг появятся вне instance)
+*.db
+*.sqlite3
+
+# IDE и прочее
+.idea/
+.vscode/
