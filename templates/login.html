@@ -13,9 +13,13 @@
         <button type="submit">Войти</button>
     </form><br>
 
-    {% if error %}
-        <p>{{ error }}</p><br>
-    {% endif %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     
     <p>Нет аккаунта? <a href="/register">Зарегистрируйтесь</a></p>
 </body>

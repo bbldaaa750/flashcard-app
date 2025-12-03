@@ -9,7 +9,6 @@ def default_page():
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    error_message = None
     if request.method == 'POST':
         username = request.form.get('username_field')
         password = request.form.get('password_field')
@@ -20,15 +19,14 @@ def login():
                 session['username'] = user.username
                 return redirect(url_for('main.dashboard'))
             else:
-                error_message = "Неправильный пароль!"
+                flash('Неправильный пароль!', 'error')
         except ValueError:
-            error_message = "Пользователь не найден!"
+            flash('Пользователь не найден!', 'error')
         
-    return render_template('login.html', error=error_message)
+    return render_template('login.html')
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
-    error_message = None
     if request.method == 'POST':
         username = request.form.get('username_field')
         password = request.form.get('password_field')
@@ -36,11 +34,11 @@ def register():
             create_user(username, password)
             user = read_user(username)
             session['username'] = user.username
-            return redirect('/main')
+            return redirect(url_for('main.dashboard'))
         except ValueError:
-            error_message = "Пользователь уже существует!"
+            flash('Пользователь уже существует!', 'error')
     
-    return render_template('register.html', error=error_message)
+    return render_template('register.html')
 
 @bp.route('/logout')
 def logout():
