@@ -15,4 +15,6 @@ def create_app():
         from models import User
         db.create_all()
     
+    app.config['SECRET_KEY'] = 'super_secret_random_string_123' # placeholder
+    
     return app
