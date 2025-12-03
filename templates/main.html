@@ -2,7 +2,11 @@
 <html>
 <head>
     <title>Система входа и выхода</title>
-    <style> .error-msg { color: red; font-weight: bold; } </style>
+    <style>
+        .alert { padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+        .alert-success { background-color: #d4edda; color: #155724; }
+        .alert-error { background-color: #f8d7da; color: #721c24; }
+    </style>
 </head>
 <body>
     <h1>Привет, {{ username }}!</h1>
@@ -16,9 +20,13 @@
         </form>
     </div>
 
-    {% if error %}
-        <p class="error-msg">{{ error }}</p><br>
-    {% endif %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
     <div style="padding: 10px;">
         <form action="/delete" method="POST">
