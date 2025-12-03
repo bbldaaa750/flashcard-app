@@ -49,7 +49,7 @@ def logout():
 def dashboard():
     if 'username' not in session:
         return redirect('/login')
-    return render_template('main.html', username=session['username'], error=None)
+    return render_template('main.html', username=session['username'])
 
 @bp.route('/delete', methods=['POST'])
 def delete_account():
