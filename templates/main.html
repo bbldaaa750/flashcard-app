@@ -2,12 +2,30 @@
 <html>
 <head>
     <title>Система входа и выхода</title>
+    <style> .error-msg { color: red; font-weight: bold; } </style>
 </head>
 <body>
     <h1>Привет, {{ username }}!</h1>
-    <form action="/delete" method="POST">
-        <button type="submit" onclick="return confirm('Точно удалить?')">Удалить аккаунт</button>
-    </form>
+
+    <div style="padding: 10px; margin-bottom: 20px;">
+        <h3>Сменить пароль</h3>
+        <form action="/change_password" method="POST">
+            <input type="password" name="new_pass1" placeholder="Новый пароль" required>
+            <input type="password" name="new_pass2" placeholder="Повторите пароль" required>
+            <button type="submit">Сохранить новый пароль</button>
+        </form>
+    </div>
+
+    {% if error %}
+        <p class="error-msg">{{ error }}</p><br>
+    {% endif %}
+
+    <div style="padding: 10px;">
+        <form action="/delete" method="POST">
+            <button type="submit" onclick="return confirm('Точно удалить?')">Удалить аккаунт</button>
+        </form>
+    </div>
+
     <p><a href="/logout">Выйти</a></p>
 </body>
 </html>

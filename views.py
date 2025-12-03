@@ -1,5 +1,5 @@
 ﻿from flask import Blueprint, request, render_template, redirect, session
-from services import create_user, read_user, delete_user
+from services import create_user, read_user, delete_user, update_user_password
 
 bp = Blueprint('main', __name__)
 
@@ -51,7 +51,7 @@ def logout():
 def main():
     if 'username' not in session:
         return redirect('/login')
-    return render_template('main.html', username=session['username'])
+    return render_template('main.html', username=session['username'], error=None)
 
 @bp.route('/delete', methods=['POST'])
 def delete_account():
@@ -60,3 +60,24 @@ def delete_account():
     delete_user(session['username'])
     session.clear()
     return redirect('/register')
+
+@bp.route('/change_password', methods=['POST'])
+def change_password():
+    error_message = None
+
+    if 'username' not in session:
+        return redirect('/login')
+    
+    pass1 = request.form.get('new_pass1')
+    pass2 = request.form.get('new_pass2')
+
+    if pass1 != pass2:
+        error_message = 'Пароли не совпадают!'
+        return render_template('main.html', username=session['username'], error=error_message)
+    
+    try:
+        update_user_password(session['username'], pass1)
+    except ValueError:
+        error_message = 'Пароль совпадает со старым!'
+
+    return render_template('main.html', username=session['username'], error=error_message)

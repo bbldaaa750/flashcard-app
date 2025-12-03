@@ -6,14 +6,17 @@
 </head>
 <body>
     <h1>Зарегистрировать аккаунт:</h1>
+
     <form method="POST">
         <input type="text" id="username" name="username_field" placeholder="Введите имя">
         <input type="text" id="password" name="password_field" placeholder="Введите пароль">
         <button type="submit">Зарегистрироваться</button>
     </form><br>
+
     {% if error %}
         <p class="error-msg">{{ error }}</p><br>
     {% endif %}
+    
     <p>Есть аккаунт? <a href="/login">Войти</a></p>
 </body>
 </html>

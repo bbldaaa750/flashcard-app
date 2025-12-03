@@ -24,3 +24,11 @@ def delete_user(username):
         db.session.commit()
     else:
         raise ValueError(f"Пользователь с именем '{username}' не найден в базе данных.")
+
+def update_user_password(username, new_password):
+    user = User.query.filter_by(username=username).first()
+    if user.password != new_password:
+        user.password = new_password
+        db.session.commit()
+    else:
+        raise ValueError(f"У пользователя с именем '{username}' такой же пароль.")
