@@ -2,11 +2,7 @@
 <html>
 <head>
     <title>Система входа и выхода</title>
-    <style>
-        .alert { padding: 10px; margin-bottom: 10px; border-radius: 5px; }
-        .alert-success { background-color: #d4edda; color: #155724; }
-        .alert-error { background-color: #f8d7da; color: #721c24; }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <h1>Привет, {{ username }}!</h1>

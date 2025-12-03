@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Система входа и выхода</title>
-    <style> .error-msg { color: red; font-weight: bold; } </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <h1>Войти в аккаунт:</h1>
@@ -14,7 +14,7 @@
     </form><br>
 
     {% if error %}
-        <p class="error-msg">{{ error }}</p><br>
+        <p>{{ error }}</p><br>
     {% endif %}
     
     <p>Нет аккаунта? <a href="/register">Зарегистрируйтесь</a></p>
