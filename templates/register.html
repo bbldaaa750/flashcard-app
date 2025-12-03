@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Система входа и выхода</title>
-    <style> .error-msg { color: red; font-weight: bold; } </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <h1>Зарегистрировать аккаунт:</h1>
@@ -13,9 +13,13 @@
         <button type="submit">Зарегистрироваться</button>
     </form><br>
 
-    {% if error %}
-        <p class="error-msg">{{ error }}</p><br>
-    {% endif %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
     
     <p>Есть аккаунт? <a href="/login">Войти</a></p>
 </body>

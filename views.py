@@ -1,4 +1,4 @@
-﻿from flask import Blueprint, request, render_template, redirect, session
+﻿from flask import Blueprint, request, render_template, redirect, url_for, session, flash
 from services import create_user, read_user, delete_user, update_user_password
 
 bp = Blueprint('main', __name__)
@@ -9,7 +9,6 @@ def default_page():
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    error_message = None
     if request.method == 'POST':
         username = request.form.get('username_field')
         password = request.form.get('password_field')
@@ -18,17 +17,16 @@ def login():
 
             if user.password == password:
                 session['username'] = user.username
-                return redirect('/main')
+                return redirect(url_for('main.dashboard'))
             else:
-                error_message = "Неправильный пароль!"
+                flash('Неправильный пароль!', 'error')
         except ValueError:
-            error_message = "Пользователь не найден!"
+            flash('Пользователь не найден!', 'error')
         
-    return render_template('login.html', error=error_message)
+    return render_template('login.html')
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
-    error_message = None
     if request.method == 'POST':
         username = request.form.get('username_field')
         password = request.form.get('password_field')
@@ -36,11 +34,11 @@ def register():
             create_user(username, password)
             user = read_user(username)
             session['username'] = user.username
-            return redirect('/main')
+            return redirect(url_for('main.dashboard'))
         except ValueError:
-            error_message = "Пользователь уже существует!"
+            flash('Пользователь уже существует!', 'error')
     
-    return render_template('register.html', error=error_message)
+    return render_template('register.html')
 
 @bp.route('/logout')
 def logout():
@@ -48,10 +46,10 @@ def logout():
     return redirect('/login')
 
 @bp.route('/main')
-def main():
+def dashboard():
     if 'username' not in session:
         return redirect('/login')
-    return render_template('main.html', username=session['username'], error=None)
+    return render_template('main.html', username=session['username'])
 
 @bp.route('/delete', methods=['POST'])
 def delete_account():
@@ -63,8 +61,6 @@ def delete_account():
 
 @bp.route('/change_password', methods=['POST'])
 def change_password():
-    error_message = None
-
     if 'username' not in session:
         return redirect('/login')
     
@@ -72,12 +68,13 @@ def change_password():
     pass2 = request.form.get('new_pass2')
 
     if pass1 != pass2:
-        error_message = 'Пароли не совпадают!'
-        return render_template('main.html', username=session['username'], error=error_message)
+        flash('Пароли не совпадают!', 'error')
+        return redirect(url_for('main.dashboard'))
     
     try:
         update_user_password(session['username'], pass1)
+        flash('Пароль успешно изменен!', 'success')
     except ValueError:
-        error_message = 'Пароль совпадает со старым!'
+        flash('Пароль совпадает со старым!', 'error')
 
-    return render_template('main.html', username=session['username'], error=error_message)
+    return redirect(url_for('main.dashboard'))
