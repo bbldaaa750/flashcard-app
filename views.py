@@ -5,7 +5,9 @@ from flask_login import login_user, logout_user, login_required, current_user
 bp = Blueprint('main', __name__)
 
 @bp.route('/')
-def default_page():
+def index():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
     return redirect(url_for('main.login'))
 
 @bp.route('/login', methods=['GET', 'POST'])
