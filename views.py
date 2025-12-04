@@ -5,7 +5,7 @@ bp = Blueprint('main', __name__)
 
 @bp.route('/')
 def default_page():
-    return redirect('/login')
+    return redirect(url_for('main.login'))
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -43,26 +43,26 @@ def register():
 @bp.route('/logout')
 def logout():
     session.pop('username', None)
-    return redirect('/login')
+    return redirect(url_for('main.login'))
 
 @bp.route('/main')
 def dashboard():
     if 'username' not in session:
-        return redirect('/login')
+        return redirect(url_for('main.login'))
     return render_template('main.html', username=session['username'])
 
 @bp.route('/delete', methods=['POST'])
 def delete_account():
     if 'username' not in session:
-        return redirect('/login')    
+        return redirect(url_for('main.login'))    
     delete_user(session['username'])
     session.clear()
-    return redirect('/register')
+    return redirect(url_for('main.register'))
 
 @bp.route('/change_password', methods=['POST'])
 def change_password():
     if 'username' not in session:
-        return redirect('/login')
+        return redirect(url_for('main.login'))
     
     pass1 = request.form.get('new_pass1')
     pass2 = request.form.get('new_pass2')
