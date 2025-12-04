@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>Привет, {{ username }}!</h1>
+    <h1>Привет, {{ current_user.username }}!</h1>
 
     <div style="padding: 10px; margin-bottom: 20px;">
         <h3>Сменить пароль</h3>
