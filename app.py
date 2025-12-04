@@ -1,6 +1,6 @@
 ﻿from flask import Flask
 from views import bp
-from extensions import db
+from extensions import db, login_manager
 
 def create_app():
     app = Flask(__name__)
@@ -8,6 +8,13 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
+
+    login_manager.init_app(app)
+
+    from models import User
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
     app.register_blueprint(bp)
 
