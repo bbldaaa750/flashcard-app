@@ -3,7 +3,7 @@ from extensions import db
 
 def create_user(username, password):
     if User.query.filter_by(username=username).first():
-        raise ValueError(f"Пользователь с именем '{username}' найден в базе данных.")
+        raise ValueError("Create failed")
     else:
         user = User(username=username, password=password)
         db.session.add(user)
@@ -15,7 +15,7 @@ def read_user(username):
     if user:
         return user
     else:
-        raise ValueError(f"Пользователь с именем '{username}' не найден в базе данных.")
+        raise ValueError("Read failed")
 
 def delete_user(username):
     user = User.query.filter_by(username=username).first()
@@ -23,12 +23,23 @@ def delete_user(username):
         db.session.delete(user)
         db.session.commit()
     else:
-        raise ValueError(f"Пользователь с именем '{username}' не найден в базе данных.")
+        raise ValueError("Delete failed")
 
 def update_user_password(username, new_password):
     user = User.query.filter_by(username=username).first()
-    if user.password != new_password:
+    if user.verify_password(new_password):
+        raise ValueError("Update failed")
+    else:
         user.password = new_password
         db.session.commit()
-    else:
-        raise ValueError(f"У пользователя с именем '{username}' такой же пароль.")
+
+def authenticate_user(username, password):
+    try:
+        user = read_user(username)
+    except ValueError:
+        raise ValueError("Auth failed")
+
+    if not user.verify_password(password):
+        raise ValueError("Auth failed")
+        
+    return user
