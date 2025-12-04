@@ -1,5 +1,5 @@
 ﻿from flask import Blueprint, request, render_template, redirect, url_for, flash
-from services import create_user, read_user, delete_user, update_user_password
+from services import create_user, delete_user, update_user_password, authenticate_user
 from flask_login import login_user, logout_user, login_required, current_user
 
 bp = Blueprint('main', __name__)
@@ -16,15 +16,14 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username_field')
         password = request.form.get('password_field')
-        try: 
-            user = read_user(username)
-            if user.password == password:
-                login_user(user)
-                return redirect(url_for('main.dashboard'))
-            else:
-                flash('Неправильный пароль!', 'error')
+
+        try:
+            user = authenticate_user(username, password)
+            login_user(user)
+            return redirect(url_for('main.dashboard'))
+            
         except ValueError:
-            flash('Пользователь не найден!', 'error')
+            flash('Неверное имя или пароль!', 'error')
         
     return render_template('login.html')
 
