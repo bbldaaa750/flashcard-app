@@ -1,5 +1,5 @@
 ﻿from flask import Blueprint, request, render_template, redirect, url_for, flash
-from services import create_user, delete_user, update_user_password, authenticate_user
+from app.services import create_user, delete_user, update_user_password, authenticate_user
 from flask_login import login_user, logout_user, login_required, current_user
 
 bp = Blueprint('main', __name__)

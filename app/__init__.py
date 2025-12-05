@@ -1,6 +1,6 @@
 ﻿from flask import Flask
-from views import bp
-from extensions import db, login_manager
+from .views import auth_bp
+from app.extensions import db, login_manager
 
 def create_app():
     app = Flask(__name__)
@@ -14,13 +14,13 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = 'main.login'
 
-    from models import User
+    from app.models import User
 
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    app.register_blueprint(bp)
+    app.register_blueprint(auth_bp)
 
     with app.app_context():
         db.create_all()
