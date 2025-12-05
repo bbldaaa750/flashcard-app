@@ -3,7 +3,7 @@ from app.extensions import db
 
 def create_user(username, password):
     if User.query.filter_by(username=username).first():
-        raise ValueError("Create failed")
+        raise ValueError("Create user failed")
     else:
         user = User(username=username, password=password)
         db.session.add(user)
@@ -15,7 +15,7 @@ def read_user(username):
     if user:
         return user
     else:
-        raise ValueError("Read failed")
+        raise ValueError("Read user failed")
 
 def delete_user(username):
     user = User.query.filter_by(username=username).first()
@@ -23,12 +23,12 @@ def delete_user(username):
         db.session.delete(user)
         db.session.commit()
     else:
-        raise ValueError("Delete failed")
+        raise ValueError("Delete user failed")
 
 def update_user_password(username, new_password):
     user = User.query.filter_by(username=username).first()
     if user.verify_password(new_password):
-        raise ValueError("Update failed")
+        raise ValueError("Update user failed")
     else:
         user.password = new_password
         db.session.commit()
@@ -37,9 +37,9 @@ def authenticate_user(username, password):
     try:
         user = read_user(username)
     except ValueError:
-        raise ValueError("Auth failed")
+        raise ValueError("Auth user failed")
 
     if not user.verify_password(password):
-        raise ValueError("Auth failed")
+        raise ValueError("Auth user failed")
         
     return user
