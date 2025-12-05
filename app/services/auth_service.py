@@ -1,5 +1,5 @@
-﻿from models import User
-from extensions import db
+﻿from app.models import User
+from app.extensions import db
 
 def create_user(username, password):
     if User.query.filter_by(username=username).first():
