@@ -2,7 +2,7 @@
 from app.services import create_deck, get_deck, get_user_decks, update_deck, delete_deck
 from flask_login import login_required, current_user
 
-bp = Blueprint('decks', __name__, url_prefix='/decks')
+bp = Blueprint('deck', __name__, url_prefix='/deck')
 
 @bp.route('/', methods=['GET', 'POST']) 
 @login_required 
@@ -18,12 +18,12 @@ def index():
         else:
             flash('Название не может быть пустым', 'error')
         
-        return redirect(url_for('decks.index'))
+        return redirect(url_for('deck.index'))
 
     user_decks = get_user_decks(current_user)
-    return render_template('decks/index.html', decks=user_decks)
+    return render_template('deck.html', decks=user_decks)
 
-
+'''
 @bp.route('/<int:deck_id>/delete', methods=['POST'])
 @login_required
 def delete(deck_id):
@@ -34,3 +34,5 @@ def delete(deck_id):
         flash('Ошибка удаления', 'error')
         
     return redirect(url_for('decks.index'))
+'''
+    
