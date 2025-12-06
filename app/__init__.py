@@ -1,5 +1,5 @@
 ﻿from flask import Flask
-from .views import auth_bp
+from .views import auth_bp, deck_bp
 from app.extensions import db, login_manager
 
 def create_app():
@@ -21,6 +21,7 @@ def create_app():
         return User.query.get(int(user_id))
 
     app.register_blueprint(auth_bp)
+    app.register_blueprint(deck_bp)
 
     with app.app_context():
         db.create_all()

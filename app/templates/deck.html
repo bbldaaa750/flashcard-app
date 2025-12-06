@@ -1,0 +1,28 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<h2>Мои колоды</h2>
+
+<form method="POST" style="margin-bottom: 20px;">
+    <input type="text" name="title" placeholder="Название новой колоды" required>
+    <button type="submit">Создать</button>
+</form>
+
+{% if decks %}
+    <ul>
+    {% for d in decks %}
+        <li style="margin-bottom: 10px;">
+            <strong>{{ d.title }}</strong>
+
+            <form action="{{ url_for('deck.delete', deck_id=d.id) }}" method="POST" style="display: inline;">
+                <button type="submit" onclick="return confirm('Вы уверены, что хотите удалить колоду {{ d.title }}? Все карточки в ней тоже удалятся!')" style="color: red; margin-left: 10px;">
+                    Удалить
+                </button>
+            </form>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Колод пока нет.</p>
+{% endif %}
+
+{% endblock %}
