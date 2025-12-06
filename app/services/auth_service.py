@@ -3,43 +3,40 @@ from app.extensions import db
 
 def create_user(username, password):
     if User.query.filter_by(username=username).first():
-        raise ValueError("Create failed")
-    else:
-        user = User(username=username, password=password)
-        db.session.add(user)
-        db.session.commit()
-        return user
+        raise ValueError(f'User "{username}" already exists')
+    user = User(username=username, password=password)
+    db.session.add(user)
+    db.session.commit()
+    return user
 
-def read_user(username):
+def get_user(username):
     user = User.query.filter_by(username=username).first()
-    if user:
-        return user
-    else:
-        raise ValueError("Read failed")
+    if not user:
+        raise ValueError(f'User "{username}" not found')
+    return user
 
-def delete_user(username):
-    user = User.query.filter_by(username=username).first()
-    if user:
-        db.session.delete(user)
-        db.session.commit()
-    else:
-        raise ValueError("Delete failed")
+def get_user_by_id(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        raise ValueError(f'User with id {user_id} not found')
+    return user
 
 def update_user_password(username, new_password):
-    user = User.query.filter_by(username=username).first()
+    user = get_user(username)
     if user.verify_password(new_password):
-        raise ValueError("Update failed")
-    else:
-        user.password = new_password
-        db.session.commit()
+        raise ValueError('New password must differ from old')
+    user.password = new_password
+    db.session.commit()
+    return user
+
+def delete_user(username):
+    user = get_user(username)
+    db.session.delete(user)
+    db.session.commit()
+    return True
 
 def authenticate_user(username, password):
-    try:
-        user = read_user(username)
-    except ValueError:
-        raise ValueError("Auth failed")
-
+    user = get_user(username)
     if not user.verify_password(password):
-        raise ValueError("Auth failed")
-        
+        raise ValueError('Invalid credentials')
     return user
