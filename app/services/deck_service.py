@@ -13,7 +13,7 @@ def get_deck(deck_id, user):
     deck = Deck.query.get(deck_id)
     if not deck:
         raise ValueError(f'Deck with id {deck_id} not found')
-    if deck.owner_id != user.id:
+    if deck.user_id != user.id:
         raise ValueError('Access denied: not your deck')
     return deck
 
