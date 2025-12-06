@@ -23,16 +23,13 @@ def index():
     user_decks = get_user_decks(current_user)
     return render_template('deck.html', decks=user_decks)
 
-'''
 @bp.route('/<int:deck_id>/delete', methods=['POST'])
 @login_required
 def delete(deck_id):
     try:
         delete_deck(deck_id, current_user)
-        flash('Колода удалена', 'success')
+        flash('Колода успешно удалена!', 'success')
     except ValueError:
-        flash('Ошибка удаления', 'error')
+        flash('Ошибка удаления колоды!', 'error')
         
-    return redirect(url_for('decks.index'))
-'''
-    
+    return redirect(url_for('deck.index'))

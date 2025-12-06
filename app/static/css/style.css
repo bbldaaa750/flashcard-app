@@ -31,5 +31,5 @@ nav a:hover {
     text-decoration: underline;
 }
 .user-info {
-    float: right; /* Имя пользователя и Выход справа */
+    float: right;
 }
