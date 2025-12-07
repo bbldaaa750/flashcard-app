@@ -1,20 +1,20 @@
-﻿from flask import Blueprint, request, render_template, redirect, url_for, flash
+﻿from flask import Blueprint, render_template, redirect, url_for, flash
 from app.services import create_user, delete_user, update_user_password, authenticate_user
 from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegistrationForm, ChangePasswordForm
 
-bp = Blueprint('main', __name__)
+bp = Blueprint('auth', __name__)
 
 @bp.route('/')
 def index():
     if current_user.is_authenticated:
-        return redirect(url_for('main.dashboard'))
-    return redirect(url_for('main.login'))
+        return redirect(url_for('auth.profile'))
+    return redirect(url_for('auth.login'))
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('main.dashboard'))
+        return redirect(url_for('auth.profile'))
     
     form = LoginForm()
     if form.validate_on_submit():
@@ -23,7 +23,7 @@ def login():
         try:
             user = authenticate_user(username, password)
             login_user(user)
-            return redirect(url_for('main.dashboard'))
+            return redirect(url_for('auth.profile'))
             
         except ValueError:
             flash('Неверное имя или пароль!', 'error')
@@ -34,7 +34,7 @@ def login():
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('main.dashboard'))
+        return redirect(url_for('auth.profile'))
 
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -44,7 +44,7 @@ def register():
             user = create_user(username, password)
             login_user(user)
             flash('Регистрация прошла успешно!', 'success')
-            return redirect(url_for('main.dashboard'))
+            return redirect(url_for('auth.profile'))
         except ValueError:
             flash('Пользователь с таким именем уже существует!', 'error')
     
@@ -54,19 +54,19 @@ def register():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main.login'))
+    return redirect(url_for('auth.login'))
 
-@bp.route('/main')
+@bp.route('/profile')
 @login_required
-def dashboard():
+def profile():
     form = ChangePasswordForm() 
-    return render_template('main.html', form=form) 
+    return render_template('profile.html', form=form) 
 
 @bp.route('/delete', methods=['POST'])
 @login_required
 def delete_account():   
     delete_user(current_user.username)
-    return redirect(url_for('main.register'))
+    return redirect(url_for('auth.register'))
 
 @bp.route('/change_password', methods=['POST'])
 @login_required
@@ -85,4 +85,4 @@ def change_password():
             for error in errors:
                 flash(f'Ошибка: {error}', 'error')
 
-    return redirect(url_for('main.dashboard'))
+    return redirect(url_for('auth.profile'))
