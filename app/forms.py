@@ -32,3 +32,14 @@ class RegistrationForm(FlaskForm):
         EqualTo('password', message="Пароли должны совпадать")
     ])
     submit = SubmitField('Зарегистрироваться')
+
+class ChangePasswordForm(FlaskForm):
+    password = PasswordField('Новый пароль', validators=[
+        DataRequired(message="Введите новый пароль"), 
+        Length(min=6, message="Пароль должен быть не короче 6 символов")
+    ])
+    confirm_password = PasswordField('Повторите пароль', validators=[
+        DataRequired(message="Повторите пароль"),
+        EqualTo('password', message="Пароли должны совпадать")
+    ])
+    submit = SubmitField('Сохранить новый пароль')

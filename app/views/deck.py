@@ -1,4 +1,4 @@
-﻿from flask import Blueprint, request, render_template, redirect, url_for, flash
+﻿from flask import Blueprint, render_template, redirect, url_for, flash
 from app.services import create_deck, get_deck, get_user_decks, update_deck, delete_deck
 from flask_login import login_required, current_user
 from app.forms import DeckForm

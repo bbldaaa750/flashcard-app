@@ -1,7 +1,7 @@
 ﻿from flask import Blueprint, request, render_template, redirect, url_for, flash
 from app.services import create_user, delete_user, update_user_password, authenticate_user
 from flask_login import login_user, logout_user, login_required, current_user
-from app.forms import LoginForm, RegistrationForm
+from app.forms import LoginForm, RegistrationForm, ChangePasswordForm
 
 bp = Blueprint('main', __name__)
 
@@ -59,7 +59,8 @@ def logout():
 @bp.route('/main')
 @login_required
 def dashboard():
-    return render_template('main.html', username=current_user.username)
+    form = ChangePasswordForm() 
+    return render_template('main.html', form=form) 
 
 @bp.route('/delete', methods=['POST'])
 @login_required
@@ -69,18 +70,19 @@ def delete_account():
 
 @bp.route('/change_password', methods=['POST'])
 @login_required
-def change_password():  
-    pass1 = request.form.get('new_pass1')
-    pass2 = request.form.get('new_pass2')
+def change_password():
+    form = ChangePasswordForm()
 
-    if pass1 != pass2:
-        flash('Пароли не совпадают!', 'error')
-        return redirect(url_for('main.dashboard'))
-    
-    try:
-        update_user_password(current_user.username, pass1)
-        flash('Пароль успешно изменен!', 'success')
-    except ValueError:
-        flash('Пароль совпадает со старым!', 'error')
+    if form.validate_on_submit():
+        new_pass = form.password.data
+        try:
+            update_user_password(current_user.username, new_pass)
+            flash('Пароль успешно изменен!', 'success')
+        except ValueError:
+            flash('Новый пароль не должен совпадать со старым!', 'error')
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'Ошибка: {error}', 'error')
 
     return redirect(url_for('main.dashboard'))

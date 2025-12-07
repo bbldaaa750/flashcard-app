@@ -1,18 +1,23 @@
 ﻿{% extends 'base.html' %}
 {% block content %}
+
 <div style="padding: 10px; margin-bottom: 20px;">
     <h3>Сменить пароль</h3>
-    <form action="/change_password" method="POST">
-        <input type="password" name="new_pass1" placeholder="Новый пароль" required>
-        <input type="password" name="new_pass2" placeholder="Повторите пароль" required>
-        <button type="submit">Сохранить новый пароль</button>
+    <form action="{{ url_for('main.change_password') }}" method="POST">
+        {{ form.hidden_tag() }}
+        <div style="margin-bottom: 10px;">
+            {{ form.password(placeholder="Новый пароль") }}
+        </div>
+        <div style="margin-bottom: 10px;">
+            {{ form.confirm_password(placeholder="Повторите пароль") }}
+        </div>
+        {{ form.submit() }}
     </form>
 </div>
 
 <div style="padding: 10px; margin-bottom: 20px">
-    <form action="/delete" method="POST">
+    <form action="{{ url_for('main.delete_account') }}" method="POST">
         <button type="submit" onclick="return confirm('Точно удалить?')">Удалить аккаунт</button>
     </form>
 </div>
-
 {% endblock %}
