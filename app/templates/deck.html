@@ -1,36 +1,64 @@
 ﻿{% extends 'base.html' %}
+{% from "macros/form_macros.html" import render_field %}
+
 {% block content %}
-<h2>Мои колоды</h2>
-
-<form method="POST" style="margin-bottom: 20px;">
-    {{ form.hidden_tag() }}
-    
-    <div style="margin-bottom: 10px;">
-        {{ form.title(placeholder="Название новой колоды", size=30) }}
-        {% for error in form.title.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Мои колоды</h2>
+        <span class="badge bg-primary rounded-pill">{{ decks|length }}</span>
     </div>
-    
-    {{ form.submit() }}
-</form>
 
-{% if decks %}
-    <ul>
-    {% for d in decks %}
-        <li style="margin-bottom: 10px;">
-            <strong>{{ d.title }}</strong>
-
-            <form action="{{ url_for('deck.delete', deck_id=d.id) }}" method="POST" style="display: inline;">
-                <button type="submit" onclick="return confirm('Удалить?')" style="color: red; margin-left: 10px;">
-                    Удалить
-                </button>
+    <div class="card mb-5 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Создать новую колоду</h5>
+            <form method="POST" class="row g-2 align-items-center">
+                {{ form.hidden_tag() }}
+                
+                <div class="col-sm-9">
+                    {{ form.title(class="form-control form-control-lg", placeholder="Например: Английские слова") }}
+                    {% for error in form.title.errors %}
+                         <div class="text-danger small mt-1">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                
+                <div class="col-sm-3">
+                    {{ form.submit(class="btn btn-success btn-lg w-100") }}
+                </div>
             </form>
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>Колод пока нет.</p>
-{% endif %}
+        </div>
+    </div>
 
+    {% if decks %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for d in decks %}
+            <div class="col">
+                <div class="card h-100 shadow-sm hover-effect">
+                    <div class="card-body text-center d-flex flex-column justify-content-center">
+                        <h4 class="card-title mb-3 text-primary">{{ d.title }}</h4>
+                        <a href="#" class="btn btn-outline-primary mb-2">Учить (Скоро)</a>
+                    </div>
+                    
+                    <div class="card-footer bg-transparent border-top-0 text-end">
+                        <form action="{{ url_for('deck.delete', deck_id=d.id) }}" method="POST">
+                            <button type="submit" class="btn btn-link text-danger p-0 text-decoration-none" onclick="return confirm('Вы уверены, что хотите удалить колоду {{ d.title }}?')">
+                                <small>Удалить</small>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5 text-muted">
+            <h4>У вас пока нет колод</h4>
+            <p>Создайте первую колоду выше, чтобы начать обучение!</p>
+        </div>
+    {% endif %}
+</div>
+
+<style>
+.hover-effect { transition: transform 0.2s; }
+.hover-effect:hover { transform: translateY(-5px); }
+</style>
 {% endblock %}

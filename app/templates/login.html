@@ -1,20 +1,27 @@
 ﻿{% extends 'base.html' %}
+{% from "macros/form_macros.html" import render_field %}
+
 {% block content %}
-<h1>Войти в аккаунт:</h1>
-
-<form method="POST">
-    {{ form.hidden_tag() }}
-    
-    <div style="margin-bottom: 10px;">
-        {{ form.username(placeholder="Введите имя") }}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="mb-4">Войти в аккаунт</h1>
+            
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                
+                {{ render_field(form.username, placeholder="Ваш логин") }}
+                {{ render_field(form.password, placeholder="Ваш пароль") }}
+                
+                <div class="d-grid gap-2">
+                    {{ form.submit(class="btn btn-primary btn-lg") }}
+                </div>
+            </form>
+            
+            <p class="mt-3 text-center">
+                Нет аккаунта? <a href="{{ url_for('auth.register') }}">Зарегистрируйтесь</a>
+            </p>
+        </div>
     </div>
-    
-    <div style="margin-bottom: 10px;">
-        {{ form.password(placeholder="Введите пароль") }}
-    </div>
-    
-    {{ form.submit() }}
-</form><br>
-
-<p>Нет аккаунта? <a href="/register">Зарегистрируйтесь</a></p>
+</div>
 {% endblock %}

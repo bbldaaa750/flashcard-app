@@ -1,23 +1,46 @@
 ﻿{% extends 'base.html' %}
+{% from "macros/form_macros.html" import render_field %}
+
 {% block content %}
-
-<div style="padding: 10px; margin-bottom: 20px;">
-    <h3>Сменить пароль</h3>
-    <form action="{{ url_for('auth.change_password') }}" method="POST">
-        {{ form.hidden_tag() }}
-        <div style="margin-bottom: 10px;">
-            {{ form.password(placeholder="Новый пароль") }}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Сменить пароль</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('auth.change_password') }}" method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        {{ render_field(form.password, placeholder="Новый пароль") }}
+                        {{ render_field(form.confirm_password, placeholder="Повторите пароль") }}
+                        
+                        <div class="d-grid mt-3">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div style="margin-bottom: 10px;">
-            {{ form.confirm_password(placeholder="Повторите пароль") }}
-        </div>
-        {{ form.submit() }}
-    </form>
-</div>
 
-<div style="padding: 10px; margin-bottom: 20px">
-    <form action="{{ url_for('auth.delete_account') }}" method="POST">
-        <button type="submit" onclick="return confirm('Точно удалить?')">Удалить аккаунт</button>
-    </form>
+        <div class="col-md-6">
+            <div class="card border-danger shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Опасная зона</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p class="card-text text-muted">
+                        Это действие необратимо. Все ваши колоды и карточки будут удалены навсегда.
+                    </p>
+                    <form action="{{ url_for('auth.delete_account') }}" method="POST">
+                        <button type="submit" class="btn btn-outline-danger w-100" onclick="return confirm('Вы уверены? Это действие нельзя отменить!')">
+                            Удалить аккаунт
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
