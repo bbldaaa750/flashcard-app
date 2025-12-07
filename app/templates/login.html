@@ -3,9 +3,17 @@
 <h1>Войти в аккаунт:</h1>
 
 <form method="POST">
-    <input type="text" id="username" name="username_field" placeholder="Введите имя">
-    <input type="password" id="password" name="password_field" placeholder="Введите пароль">
-    <button type="submit">Войти</button>
+    {{ form.hidden_tag() }}
+    
+    <div style="margin-bottom: 10px;">
+        {{ form.username(placeholder="Введите имя") }}
+    </div>
+    
+    <div style="margin-bottom: 10px;">
+        {{ form.password(placeholder="Введите пароль") }}
+    </div>
+    
+    {{ form.submit() }}
 </form><br>
 
 <p>Нет аккаунта? <a href="/register">Зарегистрируйтесь</a></p>

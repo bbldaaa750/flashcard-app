@@ -3,9 +3,30 @@
 <h1>Зарегистрировать аккаунт:</h1>
 
 <form method="POST">
-    <input type="text" id="username" name="username_field" placeholder="Введите имя">
-    <input type="password" id="password" name="password_field" placeholder="Введите пароль">
-    <button type="submit">Зарегистрироваться</button>
+    {{ form.hidden_tag() }}
+    
+    <div style="margin-bottom: 10px;">
+        {{ form.username(placeholder="Введите имя") }}
+        {% for error in form.username.errors %}
+            <span style="color: red; font-size: 0.8em;">{{ error }}</span>
+        {% endfor %}
+    </div>
+    
+    <div style="margin-bottom: 10px;">
+        {{ form.password(placeholder="Введите пароль") }}
+        {% for error in form.password.errors %}
+            <span style="color: red; font-size: 0.8em;">{{ error }}</span>
+        {% endfor %}
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        {{ form.confirm_password(placeholder="Повторите пароль") }}
+        {% for error in form.confirm_password.errors %}
+            <span style="color: red; font-size: 0.8em;">Пароли не совпадают</span>
+        {% endfor %}
+    </div>
+    
+    {{ form.submit() }}
 </form><br>
 
 <p>Есть аккаунт? <a href="/login">Войти</a></p>
