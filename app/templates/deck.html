@@ -3,8 +3,16 @@
 <h2>Мои колоды</h2>
 
 <form method="POST" style="margin-bottom: 20px;">
-    <input type="text" name="title" placeholder="Название новой колоды" required>
-    <button type="submit">Создать</button>
+    {{ form.hidden_tag() }}
+    
+    <div style="margin-bottom: 10px;">
+        {{ form.title(placeholder="Название новой колоды", size=30) }}
+        {% for error in form.title.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </div>
+    
+    {{ form.submit() }}
 </form>
 
 {% if decks %}
@@ -14,7 +22,7 @@
             <strong>{{ d.title }}</strong>
 
             <form action="{{ url_for('deck.delete', deck_id=d.id) }}" method="POST" style="display: inline;">
-                <button type="submit" onclick="return confirm('Вы уверены, что хотите удалить колоду {{ d.title }}? Все карточки в ней тоже удалятся!')" style="color: red; margin-left: 10px;">
+                <button type="submit" onclick="return confirm('Удалить?')" style="color: red; margin-left: 10px;">
                     Удалить
                 </button>
             </form>
