@@ -26,7 +26,7 @@ def login():
             return redirect(url_for('auth.profile'))
             
         except ValueError:
-            flash('Неверное имя или пароль!', 'error')
+            flash('Неверное имя или пароль!', 'danger')
         
     return render_template('login.html', form=form)
 
@@ -46,7 +46,7 @@ def register():
             flash('Регистрация прошла успешно!', 'success')
             return redirect(url_for('auth.profile'))
         except ValueError:
-            flash('Пользователь с таким именем уже существует!', 'error')
+            flash('Пользователь с таким именем уже существует!', 'danger')
     
     return render_template('register.html', form=form)
 
@@ -79,10 +79,10 @@ def change_password():
             update_user_password(current_user.username, new_pass)
             flash('Пароль успешно изменен!', 'success')
         except ValueError:
-            flash('Новый пароль не должен совпадать со старым!', 'error')
+            flash('Новый пароль не должен совпадать со старым!', 'danger')
     else:
         for field, errors in form.errors.items():
             for error in errors:
-                flash(f'Ошибка: {error}', 'error')
+                flash(f'Ошибка: {error}', 'danger')
 
     return redirect(url_for('auth.profile'))

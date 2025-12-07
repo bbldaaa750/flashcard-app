@@ -16,7 +16,7 @@ def index():
             flash(f'Колода "{title}" создана!', 'success')
             return redirect(url_for('deck.index'))
         except ValueError:
-            flash('Колода уже существует!', 'error')
+            flash('Колода уже существует!', 'danger')
             
     user_decks = get_user_decks(current_user)
     return render_template('deck.html', decks=user_decks, form=form)
@@ -29,6 +29,6 @@ def delete(deck_id):
         delete_deck(deck_id, current_user)
         flash('Колода успешно удалена!', 'success')
     except ValueError:
-        flash('Ошибка удаления колоды!', 'error')
+        flash('Ошибка удаления колоды!', 'danger')
         
     return redirect(url_for('deck.index'))
