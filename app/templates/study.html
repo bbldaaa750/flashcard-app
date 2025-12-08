@@ -1,0 +1,93 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4 text-center" style="max-width: 600px;">
+    
+    <div class="mb-4">
+        <h3>Учим: {{ deck.title }}</h3>
+        <p class="text-muted">Карточка <span id="counter">1</span> из {{ cards_json|length }}</p>
+    </div>
+
+    <div class="scene" style="perspective: 1000px; height: 300px; cursor: pointer;">
+        
+        <div class="card-obj" id="flashcard" style="width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s;">
+            
+            <div class="card-face card-front bg-white border shadow-sm rounded d-flex align-items-center justify-content-center p-4" 
+                 style="position: absolute; width: 100%; height: 100%; backface-visibility: hidden;">
+                <h2 id="card-front-text">Загрузка...</h2>
+                <div class="text-muted small position-absolute bottom-0 mb-3">Нажми, чтобы перевернуть</div>
+            </div>
+
+            <div class="card-face card-back bg-light border shadow-sm rounded d-flex align-items-center justify-content-center p-4" 
+                 style="position: absolute; width: 100%; height: 100%; backface-visibility: hidden; transform: rotateY(180deg);">
+                <h2 id="card-back-text">...</h2>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-between align-items-center">
+        <a href="{{ url_for('deck.index', deck_id=deck.id) }}" class="btn btn-outline-secondary btn-lg">Закончить</a>
+        <button id="next-btn" class="btn btn-primary btn-lg px-5">Далее &rarr;</button>
+    </div>
+
+</div>
+
+<script>
+    const cards = JSON.parse('{{ cards_json|tojson }}');
+    let currentIndex = 0;
+    let isFlipped = false;
+
+    const cardElement = document.getElementById('flashcard');
+    const frontText = document.getElementById('card-front-text');
+    const backText = document.getElementById('card-back-text');
+    const counter = document.getElementById('counter');
+    const nextBtn = document.getElementById('next-btn');
+
+    function renderCard() {
+        if (currentIndex >= cards.length) {
+            frontText.innerText = "Всё выучено! 🎉";
+            backText.innerText = "";
+            cardElement.style.pointerEvents = "none";
+            nextBtn.disabled = true;
+            nextBtn.innerText = "Конец";
+            return;
+        }
+
+        const card = cards[currentIndex];
+        frontText.innerText = card.front;
+        backText.innerText = card.back;
+        counter.innerText = currentIndex + 1;
+    }
+
+    renderCard();
+
+    document.querySelector('.scene').addEventListener('click', function() {
+        if (currentIndex >= cards.length) return;
+
+        isFlipped = !isFlipped;
+        if (isFlipped) {
+            cardElement.style.transform = 'rotateY(180deg)';
+        } else {
+            cardElement.style.transform = 'rotateY(0deg)';
+        }
+    });
+
+    nextBtn.addEventListener('click', function(e) {
+        e.stopPropagation(); 
+
+        if (currentIndex < cards.length - 1) {
+            isFlipped = false;
+            cardElement.style.transform = 'rotateY(0deg)';
+            
+            setTimeout(() => {
+                currentIndex++;
+                renderCard();
+            }, 200);
+            
+        } else {
+            currentIndex++;
+            renderCard();
+        }
+    });
+</script>
+{% endblock %}
