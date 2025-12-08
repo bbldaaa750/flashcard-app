@@ -43,3 +43,8 @@ class ChangePasswordForm(FlaskForm):
         EqualTo('password', message="Пароли должны совпадать")
     ])
     submit = SubmitField('Сохранить новый пароль')
+
+class CardForm(FlaskForm):
+    front = StringField('Вопрос', validators=[DataRequired(message="Введите вопрос")])
+    back = StringField('Ответ', validators=[DataRequired(message="Введите ответ")])
+    submit = SubmitField('Добавить')

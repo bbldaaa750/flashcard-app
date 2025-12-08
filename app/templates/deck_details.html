@@ -1,0 +1,13 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <a href="{{ url_for('deck.index') }}" class="btn btn-light mb-3">&larr; Назад к колодам</a>
+    
+    <h1>{{ deck.title }}</h1>
+    <p class="text-muted">Редактирование колоды (ID: {{ deck.id }})</p>
+    
+    <div class="alert alert-info">
+        Тут скоро появится список карточек и форма добавления!
+    </div>
+</div>
+{% endblock %}
