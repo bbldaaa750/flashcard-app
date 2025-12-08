@@ -26,7 +26,7 @@ def index():
 @login_required
 def delete(deck_id):
     try:
-        delete_deck(deck_id, current_user)
+        delete_deck(current_user, deck_id)
         flash('Колода успешно удалена!', 'success')
     except ValueError:
         flash('Ошибка удаления колоды!', 'danger')
@@ -37,7 +37,7 @@ def delete(deck_id):
 @login_required
 def details(deck_id):
     try:
-        deck = get_deck(deck_id, current_user)
+        deck = get_deck(current_user, deck_id)
     except ValueError:
         flash("Колода не найдена", "danger")
         return redirect(url_for('deck.index'))
@@ -46,11 +46,11 @@ def details(deck_id):
     
     if form.validate_on_submit():
         try:
-            create_card(deck.id, form.front.data, form.back.data)
+            create_card(current_user, deck.id, form.front.data, form.back.data)
             flash("Карточка добавлена!", "success")
             return redirect(url_for('deck.details', deck_id=deck.id))
-        except ValueError as e:
-            flash(str(e), "danger")
+        except ValueError:
+            flash("Ошибка добавления карточки", "danger")
 
     cards = get_deck_cards(deck.id)
     return render_template('deck_details.html', deck=deck, cards=cards, form=form)
@@ -59,13 +59,9 @@ def details(deck_id):
 @login_required
 def remove_card(card_id):
     try:
-        card = get_card(card_id)
-        deck_id = card.deck_id
-        
-        if card.deck.user_id != current_user.id:
-            pass
-             
-        delete_card(card_id)
+        card = get_card(card_id) 
+        deck_id = card.deck_id 
+        delete_card(current_user, card_id)
         flash("Карточка удалена", "success")
         return redirect(url_for('deck.details', deck_id=deck_id))
     except ValueError:
@@ -77,8 +73,6 @@ def remove_card(card_id):
 def edit_card(card_id):
     try:
         card = get_card(card_id)
-        if card.deck.user_id != current_user.id:
-            pass
     except ValueError:
         flash("Карточка не найдена", "danger")
         return redirect(url_for('deck.index'))
@@ -91,10 +85,10 @@ def edit_card(card_id):
 
     if form.validate_on_submit():
         try:
-            update_card(card_id, new_front=form.front.data, new_back=form.back.data)
+            update_card(current_user, card_id, new_front=form.front.data, new_back=form.back.data)
             flash("Карточка обновлена", "success")
             return redirect(url_for('deck.details', deck_id=card.deck_id))
-        except ValueError as e:
-            flash(str(e), "danger")
+        except ValueError:
+            flash("Ошибка обновления карточки", "danger")
 
     return render_template('card_edit.html', form=form, card=card)

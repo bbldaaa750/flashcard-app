@@ -9,7 +9,7 @@ def create_deck(user, title):
     db.session.commit()
     return deck
 
-def get_deck(deck_id, user):
+def get_deck(user, deck_id):
     deck = Deck.query.get(deck_id)
     if not deck:
         raise ValueError(f'Deck with id {deck_id} not found')
@@ -20,8 +20,8 @@ def get_deck(deck_id, user):
 def get_user_decks(user):
     return user.decks
 
-def update_deck(deck_id, user, new_title=None):
-    deck = get_deck(deck_id, user)
+def update_deck(user, deck_id, new_title=None):
+    deck = get_deck(user, deck_id)
     if new_title and Deck.query.filter_by(title=new_title, user_id=user.id).first():
         raise ValueError(f'Deck "{new_title}" already exists for this user')
     if new_title:
@@ -29,8 +29,8 @@ def update_deck(deck_id, user, new_title=None):
     db.session.commit()
     return deck
 
-def delete_deck(deck_id, user):
-    deck = get_deck(deck_id, user)
+def delete_deck(user, deck_id):
+    deck = get_deck(user, deck_id)
     db.session.delete(deck)
     db.session.commit()
     return True
