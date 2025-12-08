@@ -41,14 +41,22 @@
                     <div class="text-muted text-break flex-grow-1 border-start ps-3">{{ card.back }}</div>
                 </div>
                 
-                <div class="ms-3 d-flex gap-2">
-                    <a href="{{ url_for('deck.edit_card', card_id=card.id) }}" class="btn btn-sm btn-outline-secondary border-0">
+                <div class="ms-3 d-flex gap-2 align-items-center">
+                    
+                    <a href="{{ url_for('deck.edit_card', card_id=card.id) }}" 
+                    class="btn btn-sm btn-outline-secondary border-0 d-flex align-items-center justify-content-center square-btn" 
+                    title="Редактировать">
                         ✎
                     </a>
-                    <form action="{{ url_for('deck.remove_card', card_id=card.id) }}" method="POST">
-                         <button type="submit" class="btn btn-sm btn-outline-danger border-0" onclick="return confirm('Удалить карточку?')">
+
+                    <form action="{{ url_for('deck.remove_card', card_id=card.id) }}" method="POST" class="d-flex mb-0">
+                        <button type="submit" 
+                                class="btn btn-sm btn-outline-danger border-0 d-flex align-items-center justify-content-center square-btn" 
+                                onclick="return confirm('Удалить карточку?')"
+                                title="Удалить"
+                                style="font-size: 1.5rem; padding-bottom: 4px;"> 
                             &times;
-                         </button>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -61,4 +69,12 @@
         </div>
     {% endif %}
 </div>
+<style>
+.square-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 4px;
+}
+</style>
 {% endblock %}
