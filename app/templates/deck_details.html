@@ -1,13 +1,61 @@
 ﻿{% extends 'base.html' %}
+{% from "macros/form_macros.html" import render_field %}
 {% block content %}
 <div class="container mt-4">
-    <a href="{{ url_for('deck.index') }}" class="btn btn-light mb-3">&larr; Назад к колодам</a>
-    
-    <h1>{{ deck.title }}</h1>
-    <p class="text-muted">Редактирование колоды (ID: {{ deck.id }})</p>
-    
-    <div class="alert alert-info">
-        Тут скоро появится список карточек и форма добавления!
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a href="{{ url_for('deck.index') }}" class="text-decoration-none text-muted mb-2 d-block">&larr; Мои колоды</a>
+            <h2>{{ deck.title }}</h2>
+        </div>
+        <span class="badge bg-secondary">{{ cards|length }} карточек</span>
     </div>
+
+    <div class="card shadow-sm mb-4 border-primary bg-light">
+        <div class="card-body">
+            <h5 class="card-title mb-3 text-primary">Добавить новую карточку</h5>
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-5">
+                        {{ render_field(form.front, placeholder="Вопрос") }}
+                    </div>
+                    <div class="col-md-5">
+                        {{ render_field(form.back, placeholder="Ответ") }}
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            {{ form.submit(class="btn btn-primary w-100") }}
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if cards %}
+        <div class="list-group shadow-sm">
+        {% for card in cards %}
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="d-flex w-100">
+                    <div class="fw-bold me-3 text-break" style="min-width: 30%;">{{ card.front }}</div>
+                    <div class="text-muted text-break flex-grow-1 border-start ps-3">{{ card.back }}</div>
+                </div>
+                
+                <div class="ms-3">
+                    <form action="{{ url_for('deck.remove_card', card_id=card.id) }}" method="POST">
+                         <button type="submit" class="btn btn-sm btn-outline-danger border-0" onclick="return confirm('Удалить карточку?')">
+                            &times;
+                         </button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5 text-muted">
+            <p class="fs-5">В этой колоде пока пусто.</p>
+            <p>Добавьте первую карточку сверху!</p>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
