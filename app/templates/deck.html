@@ -35,8 +35,8 @@
                     <div class="card-body text-center d-flex flex-column justify-content-center">
                         <h4 class="card-title mb-3 text-primary">{{ d.title }}</h4>
                         <div class="d-grid gap-2">
-                            <a href="#" class="btn btn-primary">
-                                Учить (Скоро)
+                            <a href="{{ url_for('study.start', deck_id=d.id) }}" class="btn btn-primary">
+                                Учить
                             </a>
                             
                             <a href="{{ url_for('deck.details', deck_id=d.id) }}" class="btn btn-outline-secondary">
