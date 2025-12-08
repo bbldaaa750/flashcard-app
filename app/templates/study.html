@@ -45,8 +45,14 @@
 
     function renderCard() {
         if (currentIndex >= cards.length) {
+            if (isFlipped) {
+                cardElement.style.transform = 'rotateY(0deg)';
+                isFlipped = false;
+            }
+
             frontText.innerText = "Всё выучено! 🎉";
             backText.innerText = "";
+            
             cardElement.style.pointerEvents = "none";
             nextBtn.disabled = true;
             nextBtn.innerText = "Конец";
@@ -73,21 +79,24 @@
     });
 
     nextBtn.addEventListener('click', function(e) {
-        e.stopPropagation(); 
-
-        if (currentIndex < cards.length - 1) {
-            isFlipped = false;
-            cardElement.style.transform = 'rotateY(0deg)';
+        e.stopPropagation();
+        if (currentIndex < cards.length) {
             
-            setTimeout(() => {
+            if (isFlipped) {
+                isFlipped = false;
+                cardElement.style.transform = 'rotateY(0deg)';
+                
+                setTimeout(() => {
+                    currentIndex++;
+                    renderCard();
+                }, 600);
+                
+            } else {
                 currentIndex++;
                 renderCard();
-            }, 200);
-            
-        } else {
-            currentIndex++;
-            renderCard();
+            }
         }
     });
+
 </script>
 {% endblock %}
