@@ -1,9 +1,13 @@
 ﻿from app.models import Card, Deck
 from app.extensions import db
 
-def create_card(deck_id, front, back):
-    if not Deck.query.get(deck_id):
+def create_card(user, deck_id, front, back):
+    deck = Deck.query.get(deck_id)
+    if not deck:
         raise ValueError(f'Deck with id {deck_id} not found')
+    
+    if deck.user_id != user.id:
+        raise ValueError("You have no rights to create cards here")
 
     if Card.query.filter_by(deck_id=deck_id, front=front).first():
         raise ValueError(f'Card with question "{front}" already exists in this deck')
@@ -25,8 +29,11 @@ def get_deck_cards(deck_id):
         raise ValueError(f'Deck {deck_id} not found')
     return deck.cards 
 
-def update_card(card_id, new_front=None, new_back=None):
+def update_card(user, card_id, new_front=None, new_back=None):
     card = get_card(card_id)
+
+    if card.deck.user_id != user.id:
+        raise ValueError("You have no rights to change this card")
 
     if new_front and new_front != card.front:
         existing = Card.query.filter_by(deck_id=card.deck_id, front=new_front).first()
@@ -40,8 +47,12 @@ def update_card(card_id, new_front=None, new_back=None):
     db.session.commit()
     return card
 
-def delete_card(card_id):
+def delete_card(user, card_id):
     card = get_card(card_id)
+
+    if card.deck.user_id != user.id:
+        raise ValueError("You have no rights to delete this card")
+    
     db.session.delete(card)
     db.session.commit()
     return True
