@@ -1,6 +1,6 @@
-﻿from flask import Blueprint, render_template, redirect, url_for, flash
+﻿from flask import Blueprint, request, render_template, redirect, url_for, flash
 from app.services import create_deck, get_deck, get_user_decks, delete_deck
-from app.services import create_card, get_card, get_deck_cards, delete_card
+from app.services import create_card, get_card, get_deck_cards, update_card, delete_card
 from flask_login import login_required, current_user
 from app.forms import DeckForm, CardForm
 
@@ -11,7 +11,7 @@ bp = Blueprint('deck', __name__, url_prefix='/deck')
 def index():
     form = DeckForm()
     if form.validate_on_submit():
-        title = form.title.data 
+        title = form.title.data
         try:
             create_deck(current_user, title)
             flash(f'Колода "{title}" создана!', 'success')
@@ -71,3 +71,30 @@ def remove_card(card_id):
     except ValueError:
         flash("Ошибка удаления", "danger")
         return redirect(url_for('deck.index'))
+
+@bp.route('/card/<int:card_id>/edit', methods=['GET', 'POST'])
+@login_required
+def edit_card(card_id):
+    try:
+        card = get_card(card_id)
+        if card.deck.user_id != current_user.id:
+            pass
+    except ValueError:
+        flash("Карточка не найдена", "danger")
+        return redirect(url_for('deck.index'))
+
+    form = CardForm()
+
+    if request.method == 'GET':
+        form.front.data = card.front
+        form.back.data = card.back
+
+    if form.validate_on_submit():
+        try:
+            update_card(card_id, new_front=form.front.data, new_back=form.back.data)
+            flash("Карточка обновлена", "success")
+            return redirect(url_for('deck.details', deck_id=card.deck_id))
+        except ValueError as e:
+            flash(str(e), "danger")
+
+    return render_template('card_edit.html', form=form, card=card)
