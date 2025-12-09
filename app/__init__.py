@@ -1,5 +1,5 @@
 ﻿from flask import Flask
-from .views import auth_bp, deck_bp, study_bp, quiz_bp
+from .views import auth_bp, deck_bp, study_bp, quiz_bp, typing_bp
 from app.extensions import db, login_manager
 
 def create_app():
@@ -24,6 +24,7 @@ def create_app():
     app.register_blueprint(deck_bp)
     app.register_blueprint(study_bp)
     app.register_blueprint(quiz_bp)
+    app.register_blueprint(typing_bp)
 
     with app.app_context():
         db.create_all()
