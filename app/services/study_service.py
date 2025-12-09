@@ -1,6 +1,6 @@
 ﻿from datetime import date, timedelta
 from app.extensions import db
-from app.models import Card
+from app.models import Card, Deck
 from app.services.card_service import get_card
 
 BOX_INTERVALS = {
@@ -11,7 +11,7 @@ BOX_INTERVALS = {
 
 def get_cards_due_today(user, deck_id=None):
     query = Card.query.join(Card.deck).filter(
-        Card.deck.user_id == user.id,
+        Deck.user_id == user.id,
         Card.next_review_date <= date.today()
     )
     
