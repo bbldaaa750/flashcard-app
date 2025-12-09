@@ -1,0 +1,47 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4" style="max-width: 800px;">
+    <h2 class="mb-4">План обучения на сегодня</h2>
+
+    <div class="card mb-5 border-primary shadow-sm">
+        <div class="card-body text-center p-5">
+            <h1 class="display-4 fw-bold text-primary">{{ total_count }}</h1>
+            <p class="text-muted mb-4">Карточек к повторению всего</p>
+            
+            {% if total_count > 0 %}
+                <a href="{{ url_for('study.leitner_index') }}" class="btn btn-primary btn-lg px-5 rounded-pill">
+                    Начать общую тренировку
+                </a>
+            {% else %}
+                <div class="alert alert-success d-inline-block">
+                    🎉 Всё выучено! Отдыхайте.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <h4 class="mb-3">По колодам</h4>
+    <div class="list-group shadow-sm mb-4">
+        {% for item in decks_stats %}
+            <div class="list-group-item d-flex justify-content-between align-items-center p-3">
+                <div>
+                    <h5 class="mb-1">{{ item.deck.title }}</h5>
+                    <small class="text-muted">Всего карт в колоде: {{ item.deck.cards|length }}</small>
+                </div>
+                
+                <div class="d-flex align-items-center">
+                    {% if item.due_count > 0 %}
+                        <span class="badge bg-danger rounded-pill me-3">{{ item.due_count }} к повторению</span>
+                        <a href="{{ url_for('study.leitner_index', deck_id=item.deck.id) }}" class="btn btn-sm btn-outline-primary">
+                            Учить
+                        </a>
+                    {% else %}
+                        <span class="badge bg-success rounded-pill me-3">Готово</span>
+                        <button class="btn btn-sm btn-outline-secondary" disabled>Учить</button>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
