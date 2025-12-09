@@ -1,12 +1,21 @@
 ﻿import pytest
 from app import create_app
+from app.extensions import db
+from config import TestConfig
 
 @pytest.fixture
-def client():
-    app = create_app()
-    app.config['TESTING'] = True 
-    with app.test_client() as client:
-        yield client
+def app():
+    app = create_app(config_class=TestConfig)
+    
+    with app.app_context():
+        db.create_all()
+        yield app
+        db.session.remove()
+        db.drop_all()
+
+@pytest.fixture
+def client(app):
+    return app.test_client()
 
 def test_homepage(client):
     response = client.get('/', follow_redirects=True)

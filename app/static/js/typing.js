@@ -69,7 +69,7 @@ function showResults() {
     contentDiv.innerHTML = `
         <div class="text-center mt-5">
             <h1 class="display-4 mb-4">Результат: ${score} / ${cards.length}</h1>
-            <p class="lead text-muted">Отличная тренировка правописания!</p>
+            <p class="lead text-muted">Отличная тренировка!</p>
             <a href="/typing/dashboard" class="btn btn-primary btn-lg mt-4">К списку тестов</a>
         </div>
     `;

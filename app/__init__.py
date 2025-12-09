@@ -1,18 +1,19 @@
 ﻿from flask import Flask
-from .views import auth_bp, deck_bp, study_bp, quiz_bp, typing_bp
+from config import Config
 from app.extensions import db, login_manager
+from .views import auth_bp, deck_bp, study_bp, quiz_bp, typing_bp
 
-def create_app():
+def create_app(config_class=Config):
     app = Flask(__name__)
-
-    app.config['SECRET_KEY'] = 'super_secret_random_string_123' # placeholder
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    
+    app.config.from_object(config_class)
 
     db.init_app(app)
     login_manager.init_app(app)
-    login_manager.login_view = 'main.login'
+    
+    login_manager.login_view = 'auth.login' 
+    login_manager.login_message = "Пожалуйста, войдите, чтобы открыть эту страницу."
+    login_manager.login_message_category = "warning"
 
     from app.models import User
 
