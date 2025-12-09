@@ -3,6 +3,65 @@
 
 {% block content %}
 <div class="container mt-4">
+    <h2 class="mb-4">Личный кабинет</h2>
+
+    <div class="row mb-5">
+        <div class="col-md-5 mb-4 mb-md-0">
+            <div class="row g-3">
+                <div class="col-6">
+                    <div class="card h-100 border-primary shadow-sm">
+                        <div class="card-body text-center">
+                            <h3 class="display-4 fw-bold text-primary">{{ stats.decks_count }}</h3>
+                            <p class="text-muted mb-0">Колод создано</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card h-100 border-success shadow-sm">
+                        <div class="card-body text-center">
+                            <h3 class="display-4 fw-bold text-success">{{ stats.total_cards }}</h3>
+                            <p class="text-muted mb-0">Всего карточек</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 p-3 bg-light rounded">
+                <h5 class="mb-3">Ваш уровень знаний</h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="d-flex justify-content-between mb-2">
+                        <span>🟢 Мастер</span>
+                        <span class="fw-bold">{{ stats.box3 }}</span>
+                    </li>
+                    <li class="d-flex justify-content-between mb-2">
+                        <span>🟡 Средне</span>
+                        <span class="fw-bold">{{ stats.box2 }}</span>
+                    </li>
+                    <li class="d-flex justify-content-between">
+                        <span>🔴 Учу</span>
+                        <span class="fw-bold">{{ stats.box1 }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    <div style="width: 300px; height: 300px;">
+                        <canvas id="learningChart"
+                            data-box1="{{ stats.box1 }}"
+                            data-box2="{{ stats.box2 }}"
+                            data-box3="{{ stats.box3 }}">
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
     <div class="row">
         <div class="col-md-6">
             <div class="card shadow-sm mb-4">
@@ -12,10 +71,8 @@
                 <div class="card-body">
                     <form action="{{ url_for('auth.change_password') }}" method="POST">
                         {{ form.hidden_tag() }}
-                        
                         {{ render_field(form.password, placeholder="Новый пароль") }}
                         {{ render_field(form.confirm_password, placeholder="Повторите пароль") }}
-                        
                         <div class="d-grid mt-3">
                             {{ form.submit(class="btn btn-primary") }}
                         </div>
@@ -31,7 +88,7 @@
                 </div>
                 <div class="card-body text-center">
                     <p class="card-text text-muted">
-                        Это действие необратимо. Все ваши колоды и карточки будут удалены навсегда.
+                        Удаление аккаунта необратимо. Все ваши данные будут стерты.
                     </p>
                     <form action="{{ url_for('auth.delete_account') }}" method="POST">
                         <button type="submit" class="btn btn-outline-danger w-100" onclick="return confirm('Вы уверены? Это действие нельзя отменить!')">
@@ -43,4 +100,7 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/profile_chart.js') }}"></script>
 {% endblock %}
