@@ -32,4 +32,4 @@ def start(deck_id):
         flash("Ошибка при создании теста", "warning")
         return redirect(url_for('quiz.dashboard'))
         
-    return render_template('quiz_run.html', deck=deck, questions=quiz_data)
+    return render_template('quiz.html', deck=deck, questions=quiz_data)

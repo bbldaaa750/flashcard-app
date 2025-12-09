@@ -1,0 +1,35 @@
+﻿{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 600px; padding-bottom: 120px !important;">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="mb-0 text-primary">{{ deck.title }}</h4>
+            <small class="text-muted">Вопрос <span id="counter">1</span> из <span id="total"></span></small>
+        </div>
+        <a href="{{ url_for('quiz.dashboard') }}" class="btn btn-sm btn-outline-secondary">&times; Выход</a>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body text-center p-5">
+            <h1 class="display-6 fw-bold" id="question-text">Загрузка...</h1>
+        </div>
+    </div>
+
+    <div class="d-grid gap-3" id="options-container">
+        <!-- JS -->
+    </div>
+
+    <div class="fixed-bottom bg-white border-top p-3 text-end shadow-lg d-none" id="footer-nav" style="z-index: 1050;">
+    <div class="container" style="max-width: 600px;">
+        <button id="next-btn" class="btn btn-primary btn-lg px-5 w-100 w-md-auto">Далее &rarr;</button>
+    </div>
+</div>
+</div>
+
+<script>
+    const questions = JSON.parse('{{ questions|tojson }}');
+</script>
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+{% endblock %}
