@@ -1,27 +1,24 @@
 ﻿document.addEventListener('DOMContentLoaded', function() {
+    const chartCanvas = document.getElementById('learningChart');
+    const deckSelector = document.getElementById('deckSelector');
     
-    const chartElement = document.getElementById('learningChart');
-    if (!chartElement) return;
-    
-    const ctx = chartElement.getContext('2d');
-    
-    const box1 = Number(chartElement.dataset.box1) || 0;
-    const box2 = Number(chartElement.dataset.box2) || 0;
-    const box3 = Number(chartElement.dataset.box3) || 0;
+    if (!chartCanvas || !deckSelector) return;
 
-    const dataStats = window.chartData || { box1: 0, box2: 0, box3: 0 };
-
-    new Chart(ctx, {
+    const fullStats = JSON.parse(chartCanvas.dataset.stats);
+    
+    const elBox1 = document.getElementById('stat-box1');
+    const elBox2 = document.getElementById('stat-box2');
+    const elBox3 = document.getElementById('stat-box3');
+    const elTotal = document.getElementById('stat-total-cards');
+    
+    const ctx = chartCanvas.getContext('2d');
+    const chart = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['Учу', 'Средне', 'Мастер'],
             datasets: [{
-                data: [box1, box2, box3],
-                backgroundColor: [
-                    '#dc3545',
-                    '#ffc107',
-                    '#198754'
-                ],
+                data: [fullStats.total.box1, fullStats.total.box2, fullStats.total.box3],
+                backgroundColor: ['#dc3545', '#ffc107', '#198754'],
                 borderWidth: 0,
                 hoverOffset: 4
             }]
@@ -30,28 +27,31 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        usePointStyle: true
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            let label = context.label || '';
-                            if (label) {
-                                label += ': ';
-                            }
-                            let value = context.raw;
-                            let total = context.chart._metasets[context.datasetIndex].total;
-                            let percentage = Math.round((value / total) * 100) + '%';
-                            return label + value + ' (' + percentage + ')';
-                        }
-                    }
-                }
+                legend: { position: 'bottom' }
             }
         }
+    });
+
+    deckSelector.addEventListener('change', function() {
+        const selectedId = this.value;
+        let currentData;
+
+        if (selectedId === 'all') {
+            currentData = fullStats.total;
+        } else {
+            currentData = fullStats.decks[selectedId];
+        }
+
+        chart.data.datasets[0].data = [
+            currentData.box1, 
+            currentData.box2, 
+            currentData.box3
+        ];
+        chart.update();
+
+        elBox1.textContent = currentData.box1;
+        elBox2.textContent = currentData.box2;
+        elBox3.textContent = currentData.box3;
+        elTotal.textContent = currentData.total;
     });
 });
