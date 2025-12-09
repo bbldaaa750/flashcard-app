@@ -1,0 +1,59 @@
+﻿{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4 text-center" style="max-width: 600px;">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="mb-0">Умное повторение</h3>
+            <small class="text-muted">Осталось карт: <span id="counter">{{ cards_json|length }}</span></small>
+        </div>
+        <a href="{{ url_for('study.dashboard') }}" class="btn btn-outline-secondary btn-sm">
+            &times; Выход
+        </a>
+    </div>
+
+    <div class="scene" style="perspective: 1000px; height: 300px; cursor: pointer;">
+        <div class="card-obj" id="flashcard" style="width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.6s;">
+            <div class="card-face card-front bg-white border shadow-sm rounded d-flex align-items-center justify-content-center p-4" 
+                 style="position: absolute; width: 100%; height: 100%; backface-visibility: hidden;">
+                <h2 id="card-front-text">Загрузка...</h2>
+                <div class="text-muted small position-absolute bottom-0 mb-3">Нажми, чтобы проверить себя</div>
+            </div>
+
+            <div class="card-face card-back bg-light border shadow-sm rounded d-flex align-items-center justify-content-center p-4" 
+                 style="position: absolute; width: 100%; height: 100%; backface-visibility: hidden; transform: rotateY(180deg);">
+                <h2 id="card-back-text">...</h2>
+            </div>   
+        </div>
+    </div>
+
+    <div id="rating-buttons" class="mt-4 row g-2 justify-content-center invisible">
+        <div class="col-4">
+            <button class="btn btn-danger w-100 py-3 rating-btn" data-rating="fail">
+                Не помню 😞
+            </button>
+        </div> 
+        <div class="col-4">
+            <button class="btn btn-warning w-100 py-3 rating-btn" data-rating="hard">
+                Смутно 🤔
+            </button>
+        </div> 
+        <div class="col-4">
+            <button class="btn btn-success w-100 py-3 rating-btn" data-rating="good">
+                Помню! 😃
+            </button>
+        </div>
+    </div>
+
+    <div id="flip-hint" class="mt-4 text-muted">
+        Нажми на карту, чтобы увидеть ответ
+    </div>
+</div>
+
+<script>
+    const cards = JSON.parse('{{ cards_json|tojson }}');
+    const reviewBaseUrl = "{{ url_for('study.save_review', card_id=0) }}".slice(0, -1);
+</script>
+
+<script src="{{ url_for('static', filename='js/leitner.js') }}"></script>
+{% endblock %}

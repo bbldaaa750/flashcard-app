@@ -2,6 +2,7 @@
 from sqlalchemy import Column, Integer, String, Text, ForeignKey
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -36,5 +37,7 @@ class Card(db.Model):
     id = Column(Integer, primary_key=True)
     front = Column(Text, nullable=False)
     back = Column(Text, nullable=False)
-    
     deck_id = Column(Integer, ForeignKey('deck.id'), nullable=False)
+    box = db.Column(db.Integer, default=1, nullable=False)
+
+    next_review_date = db.Column(db.Date, default=date.today, nullable=False)
