@@ -2,7 +2,6 @@
 from app.services import create_user, delete_user, update_user_password, authenticate_user, get_user_statistics
 from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegistrationForm, ChangePasswordForm
-from app.models import Card, Deck
 
 bp = Blueprint('auth', __name__)
 
