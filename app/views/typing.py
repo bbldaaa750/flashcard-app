@@ -42,4 +42,4 @@ def start(deck_id):
         flash("Ошибка при создании письменного ввода", "warning")
         return redirect(url_for('typing.dashboard'))
         
-    return render_template('typing_run.html', deck=deck, cards=cards_data)
+    return render_template('typing.html', deck=deck, cards=cards_data)
