@@ -2,6 +2,7 @@
 from app.services import create_user, delete_user, update_user_password, authenticate_user
 from flask_login import login_user, logout_user, login_required, current_user
 from app.forms import LoginForm, RegistrationForm, ChangePasswordForm
+from app.models import Card, Deck
 
 bp = Blueprint('auth', __name__)
 
@@ -59,8 +60,26 @@ def logout():
 @bp.route('/profile')
 @login_required
 def profile():
-    form = ChangePasswordForm() 
-    return render_template('profile.html', form=form) 
+    form = ChangePasswordForm()
+
+    decks_count = len(current_user.decks)
+
+    cards_query = Card.query.join(Deck).filter(Deck.user_id == current_user.id)
+    total_cards = cards_query.count()
+
+    box1 = cards_query.filter(Card.box == 1).count()
+    box2 = cards_query.filter(Card.box == 2).count()
+    box3 = cards_query.filter(Card.box == 3).count()
+
+    stats = {
+        'total_cards': total_cards,
+        'decks_count': decks_count,
+        'box1': box1,
+        'box2': box2,
+        'box3': box3
+    }
+
+    return render_template('profile.html', form=form, stats=stats)
 
 @bp.route('/delete', methods=['POST'])
 @login_required
