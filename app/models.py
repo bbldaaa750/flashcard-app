@@ -10,7 +10,7 @@ class User(UserMixin, db.Model):
     username = Column(String(100), unique=True, nullable=False)
     password_hash = Column(String(200), nullable=False)
     
-    decks = db.relationship('Deck', backref='owner', lazy=True)
+    decks = db.relationship('Deck', backref='owner', lazy=True, cascade="all, delete-orphan") 
 
     @property
     def password(self):
